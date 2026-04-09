@@ -359,11 +359,13 @@ Research `registerDecorator` from class-validator and create a `@IsSlug()` decor
 nest generate module <name>
 nest generate controller <name>
 nest generate service <name>
+nest generate resource <name>
 
 # Shorthand
 nest g mo <name>
 nest g co <name>
 nest g s <name>
+nest g res <name>
 ```
 
 ### Common HTTP status codes in NestJS
