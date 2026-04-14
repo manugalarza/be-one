@@ -17,12 +17,86 @@
 //     age: number;
 //     role: string;
 //   }
+
+// Implement the service with in-memory storage. Methods needed:
+
+// findAll() → User[]
+// findOne(id: number) → User (throw NotFoundException if missing)
+// create(dto: CreateUserDto) → User
+// update(id: number, dto: UpdateUserDto) → User
+// remove(id: number) → User
+// Pre-populate the array with two seed users
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { Injectable } from '@nestjs/common';
-// TODO: import NotFoundException and your DTOs
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+  role: string;
+}
 
 @Injectable()
 export class UsersService {
-  // TODO: implement the service
+  // In-memory "database" – a plain array
+  private users: User[] = [
+    { id: 1, name: 'Manuela', email: 'manuela@gmail.com', age: 20, role: 'student' },
+    { id: 2, name: 'Tomas', email: 'tomas@gmail.com', age: 22, role: 'student' },
+  ];
+  private nextId = 3;
+
+  findAll(): User[] {
+    return this.users;
+  }
+
+  findOne(id: number): User {
+    const user = this.users.find((u) => u.id === id);
+    if (!user) {
+      throw new NotFoundException(`User #${id} not found`);
+    }
+    return user;
+  }
+
+  create(dto: CreateUserDto): User {
+    if (this.users.find(u => u.email === dto.email)) {
+      throw new ConflictException('Email already registered');
+    }
+    const user: User = {
+      id: this.nextId++,
+      name: dto.name,
+      email: dto.email,
+      age: dto.age,
+      role: dto.role ?? 'student',
+    };
+    this.users.push(user);
+    return user;
+  }
+
+  /**
+   * Search user by email. Returns user or throws NotFoundException.
+   */
+  findByEmail(email: string): User {
+    const user = this.users.find(u => u.email === email);
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return user;
+  }
+
+  update(id: number, dto: UpdateUserDto): User {
+    const user = this.findOne(id); // throws if not found
+    Object.assign(user, dto);
+    return user;
+  }
+
+  remove(id: number): User {
+    const user = this.findOne(id);
+    this.users = this.users.filter((u) => u.id !== id);
+    return user;
+  }
 }
+  
