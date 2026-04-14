@@ -49,6 +49,9 @@ let UsersService = class UsersService {
     }
     update(id, dto) {
         const user = this.findOne(id);
+        if (dto.email && this.users.some(u => u.email === dto.email && u.id !== id)) {
+            throw new common_1.ConflictException('Email already registered');
+        }
         Object.assign(user, dto);
         return user;
     }

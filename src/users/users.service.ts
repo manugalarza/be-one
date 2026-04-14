@@ -88,10 +88,15 @@ export class UsersService {
   }
 
   update(id: number, dto: UpdateUserDto): User {
-    const user = this.findOne(id); // throws if not found
-    Object.assign(user, dto);
-    return user;
+  const user = this.findOne(id);
+
+  if (dto.email && this.users.some(u => u.email === dto.email && u.id !== id)) {
+    throw new ConflictException('Email already registered');
   }
+
+  Object.assign(user, dto);
+  return user;
+}
 
   remove(id: number): User {
     const user = this.findOne(id);

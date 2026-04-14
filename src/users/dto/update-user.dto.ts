@@ -20,12 +20,12 @@ export class UpdateUserDto {
   @IsEmail()
   email?: string;
 
-  @IsNumber()
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(120)
-  age: number;
-
+  age?: number;
+  
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;

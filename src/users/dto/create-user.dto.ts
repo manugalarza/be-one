@@ -27,7 +27,7 @@ export class CreateUserDto {
   name: string;
 
   @IsEmail()
-  email?: string;
+  email: string;
 
   @IsNumber()
   @IsInt()

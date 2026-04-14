@@ -30,7 +30,7 @@ export class TasksController {
 
   // GET /tasks/:id
   @Get(':id')
-  findOne(id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.tasksService.findOne(id);
   }
 

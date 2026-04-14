@@ -3,7 +3,7 @@ type UserRole = (typeof UserRole)[number];
 export declare class UpdateUserDto {
     name: string;
     email?: string;
-    age: number;
+    age?: number;
     role?: UserRole;
 }
 export {};
